@@ -1,0 +1,11 @@
+from django.urls import path
+from . import views
+
+app_name = 'myapp'
+urlpatterns = [
+    path('', views.index, name='index'),
+    path('create/', views.create, name='createpage'),
+    path('join/', views.join, name='joinpage'),
+    path('quiz/', views.quiz, name='questionspage'),
+    path('participants/', views.participants, name='participantspage'),
+]
