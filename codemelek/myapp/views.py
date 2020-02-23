@@ -5,6 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 
 games = {}
+game_rooms_onPlay = []
 
 # questions = {}
 # questions[pincode] ={....} TODO USER CAN MAKE HIS OWN QUIZ
@@ -17,17 +18,17 @@ questions = {
     },
     "Q2": {
         "question": "1 Gigabyte (Gb) =",
-        "answer": ["1024 Mb", "1000 Mb", "1200 Mb", "1275 Mb"],
+        "answers": ["1024 Mb", "1000 Mb", "1200 Mb", "1275 Mb"],
         "correct_ans": "1024 Mb",
     },
     "Q3": {
         "question": "A web address is usually known as …",
-        "answer": ["URL", "UWL", "WWW", "UVL"],
+        "answers": ["URL", "UWL", "WWW", "UVL"],
         "correct_ans": "URL",
     },
     "Q4": {
         "question": "Who was the father of computer?",
-        "answer": ["Charlie Babbage", "Dennis Ritchie", "Charles Babbage", "Ken Thompson"],
+        "answers": ["Charlie Babbage", "Dennis Ritchie", "Charles Babbage", "Ken Thompson"],
         "correct_ans": "Charles Babbage",
     }
 
@@ -66,6 +67,17 @@ def participants(request):
     pincode = body['pin_code']
     result = games[pincode]
     return JsonResponse({"participants": result})
+
+
+@csrf_exempt
+def games_on_play(request):
+    if request.method == "POST":
+        body = json.loads(request.body.decode('utf-8'))
+        pincode = body['pin_code']
+        game_rooms_onPlay.append(pincode)
+        return JsonResponse({"games": game_rooms_onPlay})
+    else:
+        return JsonResponse({"games": game_rooms_onPlay})
 
 
 def quiz(request):
