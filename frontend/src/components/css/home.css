@@ -1,0 +1,12 @@
+.homepage-wrapper{
+    height: 100vh;
+    background-color: #282c34;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.btn-home{
+    margin: 5px;
+    height: 100px;
+    width: 200px;
+}

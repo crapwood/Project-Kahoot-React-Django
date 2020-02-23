@@ -1,0 +1,21 @@
+.joinpage-wrapper{
+    color: white;
+    height: 100vh;
+    background-color: #282c34;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.joinbtn{
+    margin-top: 15px;
+}
+.joinsuccess-wrapper{
+    color: white;
+    height: 100vh;
+    background-color: #282c34;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}

@@ -1,0 +1,16 @@
+.createpage-wrapper{
+    color: white;
+    height: 100vh;
+    background-color: #282c34;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.temp-wrapper{
+    margin-top: 100px;
+}
+.start-btn{
+    width: 150px;
+    height: 50px;
+}
