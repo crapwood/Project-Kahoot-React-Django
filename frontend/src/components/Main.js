@@ -5,6 +5,7 @@ import Create from "./Create";
 import Join from "./Join";
 import Play from "./Play";
 import JoinSuccess from "./JoinSuccess";
+import PlayUser from "./Play_User";
 
 const Main = () =>{
 return(<Router>
@@ -22,6 +23,9 @@ return(<Router>
           </Route>
           <Route path="/success">
             <JoinSuccess/>
+          </Route>
+          <Route path="/onplay">
+            <PlayUser/>
           </Route>
         </Router>)};
 

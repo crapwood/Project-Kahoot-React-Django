@@ -47,8 +47,8 @@ export default withRouter(function Create(props){
     };
 
     const start = async () =>{
-        // Store.id = pin_code;
-        // Store.creator = true;
+        Store.id = pin_code;
+        Store.creator = true;
         const response = await fetch('http://127.0.0.1:8000/games/', {
                 method: "POST",
                 body: JSON.stringify({'pin_code': pin_code}),
@@ -56,7 +56,10 @@ export default withRouter(function Create(props){
                     'content-type': 'application/json'
                 }
          });
-        history.push('/play');
+        history.push({
+           pathname: '/play',
+           state: { participants: participants}
+       });
     };
 
     useInterval(getParticipants, 2000);

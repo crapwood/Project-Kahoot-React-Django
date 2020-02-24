@@ -5,6 +5,7 @@ import {Store,useInterval} from "./Utils";
 
 
 export default withRouter(function JoinSuccess(props) {
+    console.log(Store);
     const {history} = props;
     const location = useLocation();
 
@@ -12,7 +13,10 @@ export default withRouter(function JoinSuccess(props) {
             const response = await fetch('http://127.0.0.1:8000/games');
             const data = await response.json();
         if(data.games.includes(location.state.pincode)){
-            history.push('/play');
+            history.push({
+           pathname: '/play',
+           state: { pincode: location.state.pincode, playername:location.state.playername }
+       });
         }
     }
 
