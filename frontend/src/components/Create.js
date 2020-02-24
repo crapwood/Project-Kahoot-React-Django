@@ -7,7 +7,6 @@ import {useInterval, Store} from "./Utils";
 
 export default withRouter(function Create(props){
     const {history} = props;
-    const [btn,setBtn] = useState("success");
     const [bg,setBg] = useState("#282c34");
     const [pin_code,setPin_Code] = useState("");
     const [participants, setParticipants] = useState([]);
@@ -35,28 +34,17 @@ export default withRouter(function Create(props){
           setParticipants([...data.participants]);
     };
 
-
     const shuffle = (array) => {
       for (let i = array.length - 1; i > 0; i--) {
         let j = Math.floor(Math.random() * (i + 1));
         [array[i], array[j]] = [array[j], array[i]];
       }
     };
-    // const changeBtnColor = () => {
-    //     const colors = ["success", "danger", "primary", "secondary", "warning", "info", "light"];
-    //     shuffle(colors);
-    //     setBtn(colors[0]);
-    // };
     const changeBgColor = () => {
       const colors = ["#ed8b06", "#2212ab", "#2bce79", "#9d15a9"];
       shuffle(colors);
       setBg(colors[0]);
     };
-
-
-    useInterval(getParticipants, 2000);
-    // useInterval(changeBtnColor, 1000);
-    useInterval(changeBgColor, 3000);
 
     const start = async () =>{
         // Store.id = pin_code;
@@ -71,11 +59,14 @@ export default withRouter(function Create(props){
         history.push('/play');
     };
 
+    useInterval(getParticipants, 2000);
+    useInterval(changeBgColor, 3000);
+    
     return(
     <div className="createpage-wrapper" style={{background: bg}}>
         <h2>Enter pincode to Join Game</h2>
         <h3>{pin_code}</h3>
-        <Button className="start-btn" onClick={start} variant={btn}>START</Button>
+        <Button className="start-btn" onClick={start} variant="dark">START</Button>
         <div className="temp-wrapper">
             <ul>
                 {participants.map(person =>{
