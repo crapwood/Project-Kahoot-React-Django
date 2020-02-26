@@ -23,7 +23,7 @@ export default withRouter(function Join(props){
       if(data.result){
         history.push({
            pathname: '/success',
-           state: { pincode: pinCode, playername:playername }
+           state: { pincode: pinCode, playername:playername, }
        });
       }
       else{

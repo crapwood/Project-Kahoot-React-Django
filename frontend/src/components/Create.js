@@ -2,8 +2,7 @@ import React, {useEffect, useState, useRef} from 'react';
 import Button from 'react-bootstrap/Button';
 import {withRouter} from "react-router-dom";
 import './css/create.css';
-import {useInterval, Store} from "./Utils";
-
+import {useInterval, shuffle} from "./Utils";
 
 export default withRouter(function Create(props){
     const {history} = props;
@@ -16,7 +15,6 @@ export default withRouter(function Create(props){
             const response = await fetch('http://127.0.0.1:8000/create');
             const data = await response.json();
             setPin_Code(data.pincode);
-            // console.log(Store);
         }
         fetchData();
         }, []);
@@ -34,21 +32,7 @@ export default withRouter(function Create(props){
           setParticipants([...data.participants]);
     };
 
-    const shuffle = (array) => {
-      for (let i = array.length - 1; i > 0; i--) {
-        let j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-      }
-    };
-    const changeBgColor = () => {
-      const colors = ["#ed8b06", "#2212ab", "#2bce79", "#9d15a9"];
-      shuffle(colors);
-      setBg(colors[0]);
-    };
-
     const start = async () =>{
-        Store.id = pin_code;
-        Store.creator = true;
         const response = await fetch('http://127.0.0.1:8000/games/', {
                 method: "POST",
                 body: JSON.stringify({'pin_code': pin_code}),
@@ -62,6 +46,11 @@ export default withRouter(function Create(props){
        });
     };
 
+    const changeBgColor = () => {
+      const colors = ["#ed8b06", "#2212ab", "#2bce79", "#9d15a9"];
+      shuffle(colors);
+      setBg(colors[0]);
+    };
     useInterval(getParticipants, 2000);
     useInterval(changeBgColor, 3000);
     

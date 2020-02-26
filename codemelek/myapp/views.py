@@ -6,7 +6,7 @@ import json
 
 games = {}
 game_rooms_onPlay = []
-
+scoreboard = {}
 # questions = {}
 # questions[pincode] ={....} TODO USER CAN MAKE HIS OWN QUIZ
 
@@ -43,10 +43,7 @@ def create(request):
     pin_code = get_random_string(length=6, allowed_chars='1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ')
     games[pin_code] = []
     print(games)
-    return JsonResponse({
-        "pincode": pin_code,
-        "participants": games[pin_code]
-    })
+    return JsonResponse({"pincode": pin_code})
 
 
 @csrf_exempt
@@ -78,6 +75,19 @@ def games_on_play(request):
         return JsonResponse({"games": game_rooms_onPlay})
     else:
         return JsonResponse({"games": game_rooms_onPlay})
+
+
+@csrf_exempt
+def on_answer(request):
+    body = json.loads(request.body.decode('utf-8'))
+    # pincode = body['pin_code']
+    # player = body['playername']
+    # question = body['q_num']
+    # print(pincode)
+    # print(player)
+    # print(question)
+    ans = body['answer']
+    print(ans)
 
 
 def quiz(request):

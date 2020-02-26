@@ -5,7 +5,6 @@ import {Store,useInterval} from "./Utils";
 
 
 export default withRouter(function JoinSuccess(props) {
-    console.log(Store);
     const {history} = props;
     const location = useLocation();
 
@@ -20,7 +19,7 @@ export default withRouter(function JoinSuccess(props) {
         }
     }
 
-    useInterval(canPlay,1000);
+    useInterval(canPlay,100);
 
     return(<div className="joinsuccess-wrapper">
             <h1>{location.state.playername} you are IN!!!!</h1>

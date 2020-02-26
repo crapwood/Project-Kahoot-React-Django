@@ -16,8 +16,21 @@
     font-size: 200px;
 }
 .timer-after-question-bigscr{
-    position: relative;
+    position: fixed;
     bottom: 0;
     left: 0;
     font-size: 70px;
 }
+.playername{
+    position: fixed;
+    bottom: 0;
+    right: 10%;
+    font-size: 70px;
+}
+.score{
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    font-size: 70px;
+}
+
