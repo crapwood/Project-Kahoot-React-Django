@@ -8,7 +8,7 @@ export default withRouter(function Create(props){
     const {history} = props;
     const [bg,setBg] = useState("#282c34");
     const [pin_code,setPin_Code] = useState("");
-    const [participants, setParticipants] = useState([]);
+    let [participants, setParticipants] = useState([]);
 
     useEffect( () => {
         async function fetchData() {
@@ -29,7 +29,11 @@ export default withRouter(function Create(props){
                 }
          });
           const data = await response.json();
-          setParticipants([...data.participants]);
+          const temp = [];
+          for(const x of data.participants){
+              temp.push(x.name);
+          }
+          setParticipants(temp);
     };
 
     const start = async () =>{
@@ -42,7 +46,7 @@ export default withRouter(function Create(props){
          });
         history.push({
            pathname: '/play',
-           state: { participants: participants}
+           state: {isCreator: true}
        });
     };
 

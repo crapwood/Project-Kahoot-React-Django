@@ -42,7 +42,7 @@ def index(request):
 def create(request):
     pin_code = get_random_string(length=6, allowed_chars='1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ')
     games[pin_code] = []
-    print(games)
+    # print(games)
     return JsonResponse({"pincode": pin_code})
 
 
@@ -50,10 +50,10 @@ def create(request):
 def join(request):
     body = json.loads(request.body.decode('utf-8'))
     pincode = body['pin_code']
-    print(games)
+    # print(games)
     result = False
     if pincode in games:
-        games[pincode].append(body['name'])
+        games[pincode].append({"name": body['name'], "score": 0})
         result = True
     return JsonResponse({"result": result})
 
@@ -77,17 +77,18 @@ def games_on_play(request):
         return JsonResponse({"games": game_rooms_onPlay})
 
 
+def update_score(participant, body):
+    if participant['name'] == body['playername']:
+        participant['score'] = body['score']
+    return participant
+
+
 @csrf_exempt
 def on_answer(request):
     body = json.loads(request.body.decode('utf-8'))
-    # pincode = body['pin_code']
-    # player = body['playername']
-    # question = body['q_num']
-    # print(pincode)
-    # print(player)
-    # print(question)
-    ans = body['answer']
-    print(ans)
+    pincode = body['pin_code']
+    games[pincode] = list(map(lambda p: update_score(p, body), games[pincode]))
+    print(games[pincode])
 
 
 def quiz(request):
