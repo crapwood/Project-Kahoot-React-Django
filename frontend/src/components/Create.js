@@ -46,7 +46,7 @@ export default withRouter(function Create(props){
          });
         history.push({
            pathname: '/play',
-           state: {isCreator: true}
+           state: {isCreator: true, pin_code:pin_code}
        });
     };
 

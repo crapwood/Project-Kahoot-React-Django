@@ -19,7 +19,7 @@ export default withRouter(function JoinSuccess(props) {
         }
     }
 
-    useInterval(canPlay,100);
+    useInterval(canPlay,50);
 
     return(<div className="joinsuccess-wrapper">
             <h1>{location.state.playername} you are IN!!!!</h1>

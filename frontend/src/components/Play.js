@@ -4,11 +4,109 @@ import {shuffle, useInterval} from "./Utils";
 import './css/play.css';
 import Button from 'react-bootstrap/Button';
 import Row from "react-bootstrap/Row";
+import Table from "react-bootstrap/Table";
 
 import joey from "./img/joey.gif";
 import teacher from "./img/teacher.gif";
 import minions from "./img/minions.gif";
 import jeremy from "./img/jeremy.gif";
+
+const End = (props) =>{
+
+
+    return <h1>END</h1>
+};
+const Result = (props) => {
+    const {pinCode, next_question, isCreator} = props;
+    const [scoreboard,setScoreboard] = useState([]);
+    const [timerScoreboard, setTimerScoreBoard] = useState(8);
+
+    useEffect(()=>{
+        getParticipants();
+        setTimerScoreBoard(10);
+    },[]);
+
+    // const goNext = async () =>{
+    //     const response = await fetch('http://127.0.0.1:8000/next/');
+    //     const data = await response.json();
+    //     console.log(data);
+    //     if(data.continue || goNextQ){
+    //         console.log("I got here");
+    //         next_question();
+    //     }
+    // };
+    useEffect(() => {
+        if (timerScoreboard === 0) return;
+        const timer = timerScoreboard;
+        setTimeout(() => {
+            if (timerScoreboard !== timer) return;
+            setTimerScoreBoard(timer - 1);
+        }, 1000)
+    }, [timerScoreboard]);
+
+
+    const getParticipants = async () => {
+        const response = await fetch('http://127.0.0.1:8000/participants/', {
+            method: "POST",
+            body: JSON.stringify({'pin_code': pinCode}),
+            headers: {
+                'content-type': 'application/json'
+            }
+        });
+        const data = await response.json();
+        let temp = [];
+        for (const x of data.participants) {
+            temp.push(x);
+        }
+        temp.sort((a, b) => a.score > b.score ? -1 : 1);
+        setScoreboard(temp);
+    };
+
+    const showScores = () =>{
+        return scoreboard.map(x =>
+            <tr>
+                <td>{x.name}</td>
+                <td>{x.score}</td>
+            </tr>
+        )
+    };
+    //
+    // const nextQ = async () =>{
+    //     const response = await fetch('http://127.0.0.1:8000/next/', {
+    //         method: "POST",
+    //         body: JSON.stringify({'next': true}),
+    //         headers: {
+    //             'content-type': 'application/json'
+    //         }
+    //     });
+    //   setGoNextQ(true);
+    // };
+
+
+
+    const showTable = () =>{
+      return <>
+        <Table striped bordered hover variant="dark">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Score</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  {isCreator && showScores()}
+                  </tbody>
+                </Table>
+          </>
+
+    };
+
+    return (<>
+                {!isCreator && (<h1>LOOK AT THE BIG SCREEN!!!</h1>)}
+                {isCreator && showTable()}
+                {timerScoreboard === 0 && next_question()}
+            </>)
+};
 
 
 const Play = (props) => {
@@ -25,17 +123,16 @@ const Play = (props) => {
     const [choice2, setChoice2] = useState("");
     const [choice3, setChoice3] = useState("");
     const [choice4, setChoice4] = useState("");
+    const [isRight,setIsRight] = useState(false);
 
     const thumbs_up = [joey, jeremy, minions, teacher];
     shuffle(thumbs_up);
-
 
     // STARTING TIMER 5 SECONDS
     useEffect(() => {
         setDidAnswer(false);
         if (timerBeforeQ === 0) return;
         const currentTimer = timerBeforeQ;
-
         setTimeout(() => {
             if (timerBeforeQ !== currentTimer) return;
             setTimerBeforeQ(currentTimer - 1);
@@ -57,7 +154,6 @@ const Play = (props) => {
         async function fetchData() {
             const response = await fetch('http://127.0.0.1:8000/quiz');
             const data = await response.json();
-
             for (const item in data) {
                 local_data.push({
                     entry: {
@@ -71,6 +167,7 @@ const Play = (props) => {
             setLocalData([...local_data]);
             nextQuestion();
         }
+
         fetchData();
     }, []);
 
@@ -94,6 +191,7 @@ const Play = (props) => {
 
     // GET WHO ANSWERED AND WHAT
     const onAnswer = async (ans) => {
+        setIsRight(false);
         if (ans === local_data[count - 1].entry.right_ans) {
             setScore((oldScore) => {
                 const newScore = oldScore + (timerAfterQ * 10);
@@ -110,73 +208,46 @@ const Play = (props) => {
                 });
                 return newScore;
             });
+            setIsRight(true)
         }
-        getParticipants();
+        console.log("this is from create "+location.state.pin_code);
+        console.log("this is from joinsucces"+location.state.pincode);
         setDidAnswer(true);
         setShow(false);
     };
 
-    function compare(a, b) {
-      // Use toUpperCase() to ignore character casing
-      const scoreA = a.score;
-      const scoreB = b.score;
-
-      let comparison = 0;
-      if (scoreA > scoreB) {
-        comparison = -1;
-      } else if (scoreA < scoreB) {
-        comparison = 1;
-      }
-      return comparison;
-    }
-
-
-    const getParticipants = async () =>{
-         const response = await fetch('http://127.0.0.1:8000/participants/', {
-                method: "POST",
-                body: JSON.stringify({'pin_code': location.state.pincode}),
-                headers: {
-                    'content-type': 'application/json'
-                }
-         });
-          const data = await response.json();
-          let temp = [];
-          for(const x of data.participants){
-              temp.push(x);
-          }
-          // setParticipants(temp);
-        temp.sort(compare);
-    };
 
     return (
         <div className="playpage-wrapper">
-            {!didAnswer && (<h2>{Q}</h2>)}
-            {didAnswer && (<img src={thumbs_up[0]} alt="thumbs up"/>)}
+            {!didAnswer && timerAfterQ > 0 && (<h2>{Q}</h2>)}
+            {didAnswer && timerAfterQ > 0 && isRight&&(<img src={thumbs_up[0]} alt="thumbs up"/>)}
+            {didAnswer && timerAfterQ > 0 && !isRight&&(<h1>SORRY WRONG ANSWER....</h1>)}
             {timerBeforeQ > 0 && (<h1 className="timer-before-question-bigscr">{timerBeforeQ}</h1>)}
             <Row>
-                {show && (<Button onClick={() => {
+                {show && timerAfterQ > 0 && (<Button onClick={() => {
                     onAnswer(choice1)
                 }} style={{color: "white", fontSize: 40 + "px"}} className="answer-btn"
-                                  variant="danger">{choice1}</Button>)}
-                {show && (<Button onClick={() => {
+                                                     variant="danger">{choice1}</Button>)}
+                {show && timerAfterQ > 0 && (<Button onClick={() => {
                     onAnswer(choice2)
                 }} style={{color: "white", fontSize: 40 + "px"}} className="answer-btn"
-                                  variant="success">{choice2}</Button>)}
+                                                     variant="success">{choice2}</Button>)}
             </Row>
             <Row>
-                {show && (<Button onClick={() => {
+                {show && timerAfterQ > 0 && (<Button onClick={() => {
                     onAnswer(choice3)
                 }} style={{color: "white", fontSize: 40 + "px"}} className="answer-btn"
-                                  variant="primary">{choice3}</Button>)}
-                {show && (<Button onClick={() => {
+                                                     variant="primary">{choice3}</Button>)}
+                {show && timerAfterQ > 0 && (<Button onClick={() => {
                     onAnswer(choice4)
                 }} style={{color: "white", fontSize: 40 + "px"}} className="answer-btn"
-                                  variant="warning">{choice4}</Button>)}
+                                                     variant="warning">{choice4}</Button>)}
             </Row>
-            {timerAfterQ === 0 && count < local_data.length && (nextQuestion())}
-            {(show || didAnswer) && (<p className="timer-after-question-bigscr">{timerAfterQ}</p>)}
-            <p className="playername">{location.state.playername}</p>
-            <p className="score">{score}</p>
+            {timerAfterQ === 0 && count < local_data.length && (
+                <Result isCreator={location.state.isCreator} pinCode={location.state.pin_code} next_question={nextQuestion}/>)}
+            {(show || didAnswer) && timerAfterQ > 0 && (<p className="timer-after-question-bigscr">{timerAfterQ}</p>)}
+            {timerAfterQ > 0 && (<p className="playername">{location.state.playername}</p>)}
+            {count === local_data.length && <End/>}
         </div>
     )
 };

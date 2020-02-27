@@ -22,14 +22,24 @@ questions = {
         "correct_ans": "1024 Mb",
     },
     "Q3": {
+        "question": "In JS if you add [1, 2, 3] + [4, 5, 6] will result to?",
+        "answers": ["[1, 2, 3, 4, 5, 6]", "[1, 2, 34, 5, 6]", "[[1, 2, 3], [4, 5, 6]]", "ERROR"],
+        "correct_ans": "[1, 2, 34, 5, 6]",
+    },
+    "Q4": {
         "question": "A web address is usually known as …",
         "answers": ["URL", "UWL", "WWW", "UVL"],
         "correct_ans": "URL",
     },
-    "Q4": {
+    "Q5": {
         "question": "Who was the father of computer?",
         "answers": ["Charlie Babbage", "Dennis Ritchie", "Charles Babbage", "Ken Thompson"],
         "correct_ans": "Charles Babbage",
+    },
+    "Q6": {
+        "question": "Mi hamelek shel CSS?",
+        "answers": ["NETANEL", "NETANEL", "NETANEL", "NETANEL"],
+        "correct_ans": "NETANEL",
     }
 
 }
@@ -90,6 +100,13 @@ def on_answer(request):
     games[pincode] = list(map(lambda p: update_score(p, body), games[pincode]))
     print(games[pincode])
 
+
+temp = {}
+@csrf_exempt
+def next(request):
+        body = json.loads(request.body)
+        temp.add('continue', body['next'])
+        return JsonResponse(temp)
 
 def quiz(request):
     return JsonResponse(questions)

@@ -27,6 +27,9 @@ return(<Router>
           <Route path="/onplay">
             <PlayUser/>
           </Route>
+          <Route path="/end">
+            <PlayUser/>
+          </Route>
         </Router>)};
 
 export default Main
