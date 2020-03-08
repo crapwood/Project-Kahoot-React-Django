@@ -12,7 +12,7 @@ export default withRouter(function Join(props){
 
     const onSubmit = async () => {
       setInvalidPin("");
-      const response = await fetch('http://127.0.0.1:8000/join/', {
+      const response = await fetch('/join/', {
         method: "POST",
         body: JSON.stringify({'pin_code': pinCode, "name": playername}),
         headers: {

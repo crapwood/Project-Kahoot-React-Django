@@ -12,7 +12,7 @@ export default withRouter(function Create(props){
 
     useEffect( () => {
         async function fetchData() {
-            const response = await fetch('http://127.0.0.1:8000/create');
+            const response = await fetch('/create/');
             const data = await response.json();
             setPin_Code(data.pincode);
         }
@@ -21,7 +21,7 @@ export default withRouter(function Create(props){
 
     const getParticipants = async () =>{
          if(pin_code.length === 0) return;
-         const response = await fetch('http://127.0.0.1:8000/participants/', {
+         const response = await fetch('/participants/', {
                 method: "POST",
                 body: JSON.stringify({'pin_code': pin_code}),
                 headers: {
@@ -37,7 +37,7 @@ export default withRouter(function Create(props){
     };
 
     const start = async () =>{
-        const response = await fetch('http://127.0.0.1:8000/games/', {
+        const response = await fetch('/games/', {
                 method: "POST",
                 body: JSON.stringify({'pin_code': pin_code}),
                 headers: {

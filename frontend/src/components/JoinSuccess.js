@@ -9,7 +9,7 @@ export default withRouter(function JoinSuccess(props) {
     const location = useLocation();
 
     async function canPlay() {
-            const response = await fetch('http://127.0.0.1:8000/games');
+            const response = await fetch('/games/');
             const data = await response.json();
         if(data.games.includes(location.state.pincode)){
             history.push({

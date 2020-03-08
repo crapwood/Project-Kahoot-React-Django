@@ -26,15 +26,6 @@ const Result = (props) => {
         setTimerScoreBoard(10);
     },[]);
 
-    // const goNext = async () =>{
-    //     const response = await fetch('http://127.0.0.1:8000/next/');
-    //     const data = await response.json();
-    //     console.log(data);
-    //     if(data.continue || goNextQ){
-    //         console.log("I got here");
-    //         next_question();
-    //     }
-    // };
     useEffect(() => {
         if (timerScoreboard === 0) return;
         const timer = timerScoreboard;
@@ -46,7 +37,7 @@ const Result = (props) => {
 
 
     const getParticipants = async () => {
-        const response = await fetch('http://127.0.0.1:8000/participants/', {
+        const response = await fetch('/participants/', {
             method: "POST",
             body: JSON.stringify({'pin_code': pinCode}),
             headers: {
@@ -70,19 +61,6 @@ const Result = (props) => {
             </tr>
         )
     };
-    //
-    // const nextQ = async () =>{
-    //     const response = await fetch('http://127.0.0.1:8000/next/', {
-    //         method: "POST",
-    //         body: JSON.stringify({'next': true}),
-    //         headers: {
-    //             'content-type': 'application/json'
-    //         }
-    //     });
-    //   setGoNextQ(true);
-    // };
-
-
 
     const showTable = () =>{
       return <>
@@ -152,7 +130,7 @@ const Play = (props) => {
     // GET QUIZ FROM DB
     useEffect(() => {
         async function fetchData() {
-            const response = await fetch('http://127.0.0.1:8000/quiz');
+            const response = await fetch('/quiz/');
             const data = await response.json();
             for (const item in data) {
                 local_data.push({
@@ -195,7 +173,7 @@ const Play = (props) => {
         if (ans === local_data[count - 1].entry.right_ans) {
             setScore((oldScore) => {
                 const newScore = oldScore + (timerAfterQ * 10);
-                fetch('http://127.0.0.1:8000/onanswer/', {
+                fetch('/onanswer/', {
                     method: "POST",
                     body: JSON.stringify({
                         playername: location.state.playername,
